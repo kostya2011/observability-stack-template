@@ -9,4 +9,3 @@ dependencies:
   - name: grafana
     version: 6.40.x
     repository: https://grafana.github.io/helm-charts
-

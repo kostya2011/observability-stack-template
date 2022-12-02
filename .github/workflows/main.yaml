@@ -25,6 +25,9 @@ jobs:
           curl -Lo ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-$(uname)-amd64.tar.gz
           tar -xzf terraform-docs.tar.gz
           chmod +x terraform-docs
-          mv terraform-docs /usr/local/terraform-docs
+          mv terraform-docs $HOME/.local/bin
+          # Add local executable to PATH
+          # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#example-8
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Run pre-commit
         run: pre-commit run --all-files

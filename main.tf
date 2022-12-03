@@ -6,12 +6,21 @@ locals {
   namespaces = ["demo-apps", "demo-monitoring"]
   helm_releases = {
     monitoring = {
-      chart     = "./monitoring-helm"
-      namespace = "demo-monitoring"
-      atomic    = true
+      chart           = "./monitoring-helm"
+      namespace       = "demo-monitoring"
+      atomic          = true
+      cleanup_on_fail = true
       values = [
         file("./monitoring-helm/values.yaml")
       ]
+    }
+    echo-server = {
+      repository      = "https://ealenn.github.io/charts"
+      chart           = "echo-server"
+      version         = "0.5.0"
+      atomic          = true
+      cleanup_on_fail = true
+      namespace       = "demo-apps"
     }
   }
 }
@@ -55,10 +64,12 @@ resource "helm_release" "this" {
   chart      = each.value.chart
   version    = try(each.value.version, null)
 
-  values    = try(each.value.values, null)
-  namespace = try(each.value.namespace, "default")
-  verify    = try(each.value.verify, false)
-  atomic    = try(each.value.atomic, false)
+  values          = try(each.value.values, null)
+  namespace       = try(each.value.namespace, "default")
+  verify          = try(each.value.verify, false)
+  atomic          = try(each.value.atomic, false)
+  cleanup_on_fail = try(each.value.cleanup_on_fail, false)
+
 
   dynamic "set" {
     for_each = try(each.value.override_values, {})

@@ -1,2 +1,10 @@
 # Chart dependencies
 **/charts/*.tgz
+
+# terraform
+*.tfstate
+*.tfstate.json
+*.tfvars
+*.tfvars.json
+**/.terraform/
+*.tfstate.backup

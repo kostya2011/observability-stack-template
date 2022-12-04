@@ -1,0 +1,5 @@
+---
+apiVersion: v2
+name: demo-app-python
+description: demo-app-python with json logs helm chart
+version: 1.0.0

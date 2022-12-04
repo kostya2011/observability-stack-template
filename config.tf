@@ -28,6 +28,15 @@ locals {
       cleanup_on_fail = true
       namespace       = "demo-apps"
     }
+    python-demo-logs-app = {
+      chart           = "./demo-services/python-logs/deployment"
+      namespace       = "demo-monitoring"
+      atomic          = true
+      cleanup_on_fail = true
+      values = [
+        file("./demo-services/python-logs/deployment/values.yaml")
+      ]
+    }
   }
 }
 

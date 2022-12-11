@@ -32,12 +32,12 @@ locals {
     }
     python-demo-logs-app = {
       enabled         = var.py_logging_helm_enabled
-      chart           = "./demo-services/python-logs/deployment"
+      chart           = "./demo-services/python-app/deployment"
       namespace       = "demo-monitoring"
       atomic          = true
       cleanup_on_fail = true
       values = [
-        file("./demo-services/python-logs/deployment/values.yaml")
+        file("./demo-services/python-app/deployment/values.yaml")
       ]
     }
   }

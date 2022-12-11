@@ -16,8 +16,8 @@ service_ports:
 
 resources:
   requests:
-    memory: "24Mi"
+    memory: "64Mi"
     cpu: "64m"
   limits:
-    memory: "24Mi"
+    memory: "64Mi"
     cpu: "64m"

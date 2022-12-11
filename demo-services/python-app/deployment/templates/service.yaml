@@ -10,6 +10,5 @@ spec:
   ports:
 {{ toYaml (.Values.service_ports) | indent 4 }}
   selector:
-    app: {{ .Values.app }}
+{{ include "py_log_demo.selectorLabels" . | indent 4 }}
   type: ClusterIP
-  clusterIP: None

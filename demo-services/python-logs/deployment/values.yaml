@@ -2,6 +2,7 @@
 app: demo-app-python
 namespace: demo-apps
 image: local/python-logs-demo-app:v1.0.0
+type: python
 
 container_ports:
   - containerPort: 5000

@@ -1,4 +1,5 @@
 import datetime, logging, sys, json_logging, fastapi, uvicorn
+from fastapi import  HTTPException
 
 app = fastapi.FastAPI()
 json_logging.init_fastapi(enable_json=True)
@@ -21,8 +22,11 @@ def home():
 def error():
     logger.info("This one always produces error")
     correlation_id = json_logging.get_correlation_id()
-    raise "I'm broken"
-
+    try:
+      raise "I'm broken"
+    except Exception as e:
+      logger.error("Broken location", exc_info=True)
+      raise HTTPException(status_code=502, detail="New Error Found")
 
 if __name__ == "__main__":
     uvicorn.run(app, host='0.0.0.0', port=5000)

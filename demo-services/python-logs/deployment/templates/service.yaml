@@ -5,7 +5,7 @@ metadata:
   name: {{ .Values.app }}
   namespace: {{ .Values.namespace }}
   labels:
-    app: {{ .Values.app }}
+{{ include "py_log_demo.labels" . | indent 4 }}
 spec:
   ports:
 {{ toYaml (.Values.service_ports) | indent 4 }}

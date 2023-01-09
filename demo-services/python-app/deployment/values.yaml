@@ -21,3 +21,8 @@ resources:
   limits:
     memory: "64Mi"
     cpu: "64m"
+
+monitoring:
+  enabled: true
+  metrics_path: "/metrics"
+  metrics_port_number: 5000

@@ -16,6 +16,8 @@ spec:
     metadata:
       labels:
 {{ include "py_log_demo.selectorLabels" . | indent 8 }}
+      annotations:
+{{ include "py_log_demo.annotations" . | indent 8 }}
     spec:
       containers:
       - image: {{ .Values.image }}

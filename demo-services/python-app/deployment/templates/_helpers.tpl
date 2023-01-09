@@ -52,3 +52,15 @@ app.kubernetes.io/name: {{ include "py_log_demo.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/type: {{ .Values.type }}
 {{- end }}
+
+{{/*
+Deployment annotations
+*/}}
+{{- define "py_log_demo.annotations" -}}
+app.kubernetes.io/name: {{ include "py_log_demo.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/type: {{ .Values.type }}
+prometheus.io/scrape: {{ .Values.monitoring.enabled | default "false" | quote }}
+prometheus.io/path: {{ .Values.monitoring.metrics_path | default "/metrics" | quote }}
+prometheus.io/port: {{ .Values.monitoring.metrics_port_number | default "8080" | quote }}
+{{- end }}

@@ -1,0 +1,76 @@
+loki:
+  auth_enabled: false
+  commonConfig:
+    path_prefix: "/var/loki"
+    replication_factor: 1
+
+  # Run as root
+  # er=log.go:171 msg="error running loki" err="mkdir /var/loki/boltdb-shipper-cache: permission denied
+  podSecurityContext:
+    runAsUser: 0
+    runAsNonRoot: false
+    runAsGroup: 0
+    fsGroup: 0
+
+  storage:
+    type: "filesystem"
+
+  schema_config:
+    configs:
+    - from: 2022-12-12
+      store: boltdb
+      object_store: filesystem
+      schema: v12
+      index:
+        prefix: index_
+        period: 168h
+storage_config:
+  boltdb:
+    directory: /var/loki/index
+
+  filesystem:
+    directory: /var/loki/chunks
+
+test:
+  enabled: false
+monitoring:
+  lokiCanary:
+    enabled: false
+  dashboards:
+    enabled: false
+  rules:
+    enabled: false
+  alerts:
+    enabled: false
+  serviceMonitor:
+    enabled: false
+  selfMonitoring:
+    enabled: false
+    lokiCanary:
+      enabled: false
+    grafanaAgent:
+      installOperator: false
+
+minio:
+  enabled: ${minio_enabled}
+  replicas: ${minio_replicas}
+  rootUser: ${minio_user}
+  rootPassword: ${minio_password}
+  buckets:
+    - name: chunks
+      policy: none
+      purge: false
+    - name: ruler
+      policy: none
+      purge: false
+    - name: admin
+      policy: none
+      purge: false
+  persistence:
+    size: ${minio_size_gb}Gi
+  # Run as root
+  securityContext:
+    runAsUser: 0
+    runAsNonRoot: false
+    runAsGroup: 0
+    fsGroup: 0

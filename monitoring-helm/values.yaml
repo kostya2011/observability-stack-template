@@ -54,4 +54,4 @@ grafana:
       datasources:
         - name: Prometheus
           type: prometheus
-          url: http://prom-prometheus-server.default.svc.cluster.local
+          url: http://monitoring-prometheus-server.demo-monitoring.svc.cluster.local # yamllint disable-line rule:line-length

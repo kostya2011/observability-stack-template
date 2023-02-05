@@ -1,0 +1,91 @@
+loki:
+  # Run as root as minikibe uses hostPath driver for default storage class
+  # https://stackoverflow.com/questions/60479594/minikube-volume-write-permissions
+  podSecurityContext:
+    runAsUser: 0
+    runAsNonRoot: false
+    runAsGroup: 0
+    fsGroup: 0
+  auth_enabled: false
+  commonConfig:
+    path_prefix: /var/loki
+    replication_factor: 1
+  storage:
+    bucketNames:
+      chunks: test-loki-0
+    type: s3
+  schema_config:
+    configs:
+    - from: "2022-01-11"
+      index:
+        period: 24h
+        prefix: loki_index_
+      store: boltdb-shipper
+      object_store: s3
+      schema: v12
+  storage_config:
+    aws:
+      s3: http://${minio_user}:${minio_password}@minio.:9000/test-loki-0
+      s3forcepathstyle: true
+    boltdb_shipper:
+      active_index_directory: /var/loki/index
+      shared_store: s3
+  rulerConfig:
+    storage:
+      type: local
+      local:
+        directory: /var/loki/rules
+write:
+  replicas: 2
+  securityContext:
+    runAsUser: 0
+    runAsNonRoot: false
+    runAsGroup: 0
+    fsGroup: 0
+read:
+  replicas: 1
+
+test:
+  enabled: false
+monitoring:
+  lokiCanary:
+    enabled: false
+  dashboards:
+    enabled: false
+  rules:
+    enabled: false
+  alerts:
+    enabled: false
+  serviceMonitor:
+    enabled: false
+  selfMonitoring:
+    enabled: false
+    grafanaAgent:
+      installOperator: false
+
+minio:
+  enabled: ${minio_enabled}
+  replicas: ${minio_replicas}
+  rootUser: ${minio_user}
+  rootPassword: ${minio_password}
+  buckets:
+    - name: chunks
+      policy: none
+      purge: false
+    - name: ruler
+      policy: none
+      purge: false
+    - name: admin
+      policy: none
+      purge: false
+    - name: test-loki-0
+      policy: none
+      purge: false
+  persistence:
+    size: ${minio_size_gb}Gi
+  # Run as root
+  securityContext:
+    runAsUser: 0
+    runAsNonRoot: false
+    runAsGroup: 0
+    fsGroup: 0

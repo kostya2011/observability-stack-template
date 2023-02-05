@@ -55,3 +55,6 @@ grafana:
         - name: Prometheus
           type: prometheus
           url: http://monitoring-prometheus-server.demo-monitoring.svc.cluster.local # yamllint disable-line rule:line-length
+        - name: Loki
+          type: loki
+          url: http://loki-gateway.demo-loki.svc.cluster.local # yamllint disable-line rule:line-length

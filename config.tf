@@ -41,15 +41,15 @@ locals {
       ]
     }
     loki = {
-      enabled    = var.loki_helm_enabled
-      repository = "https://grafana.github.io/helm-charts"
-      chart      = "loki"
-      # version         = "4.4.2"
+      enabled         = var.loki_helm_enabled
+      repository      = "https://grafana.github.io/helm-charts"
+      chart           = "loki"
+      version         = "4.4.2"
       atomic          = false
       cleanup_on_fail = false
       namespace       = "demo-loki"
       values = [
-        templatefile("./loki-config/values.tfpl",
+        templatefile("./logging/values-loki.tfpl",
           {
             minio_enabled  = true
             minio_replicas = 1
@@ -66,5 +66,5 @@ locals {
 resource "random_string" "minio_password" {
   length           = 16
   special          = true
-  override_special = "/@$"
+  override_special = "^*!"
 }

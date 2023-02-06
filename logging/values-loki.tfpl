@@ -12,7 +12,7 @@ loki:
     replication_factor: 1
   storage:
     bucketNames:
-      chunks: test-loki-0
+      chunks: chunks
     type: s3
   schema_config:
     configs:

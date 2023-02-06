@@ -59,6 +59,18 @@ locals {
         })
       ]
     }
+    promtail = {
+      enabled         = var.loki_helm_enabled
+      repository      = "https://grafana.github.io/helm-charts"
+      chart           = "promtail"
+      version         = "6.8.2"
+      atomic          = false
+      cleanup_on_fail = false
+      namespace       = "demo-loki"
+      values = [
+        templatefile("./logging/values-promtail.tfpl", {})
+      ]
+    }
   }
   helm_releases = { for k, v in local.helm_releases_tmpl : k => v if v.enabled == true }
 }

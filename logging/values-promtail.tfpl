@@ -1,0 +1,22 @@
+config:
+  logLevel: info
+  serverPort: 3101
+  clients:
+    - url: http://loki-gateway/loki/api/v1/push
+  snippets:
+    extraRelabelConfigs:
+      # keep all kubernetes labels
+      # https://github.com/grafana/loki/issues/3519#issuecomment-1282295008
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+    pipelineStages:
+      - docker: {}
+      - cri: {}
+      - match:
+          selector: '{app=~"grafana|prometheus"}'
+          stages:
+          - regex:
+              expression: ".*(lvl|level)=(?P<level>[a-zA-Z]+).*(logger|component)=(?P<component>[a-zA-Z]+)"
+          - labels:
+              level:
+              component:

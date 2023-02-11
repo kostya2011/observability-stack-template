@@ -20,3 +20,37 @@ config:
           - labels:
               level:
               component:
+      - labeldrop:
+          - job
+          - pod_template_hash
+          - instance
+      - match:
+          selector: '{app_kubernetes_io_type="python"}'
+          stages:
+            - json:
+                expressions:
+                  http_request_type: type
+            - labels:
+                http_request_type:
+            - match:
+                selector: '{http_request_type="request"}'
+                stages:
+                  - json:
+                      expressions:
+                        correlation_id:
+                        method:
+                        protocol:
+                        remote_ip:
+                        response_content_type:
+                        request:
+                        response_status:
+                  - labels:
+                      correlation_id:
+                      method:
+                      request:
+                      response_status:
+                  - template:
+                      source: output_msg
+                      template: '[remote_ip] {{ .method }} {{ .request }} {{ .response_status}} | {{ .protocol}} | {{ .response_content_type }}'
+                  - output:
+                      source: output_msg

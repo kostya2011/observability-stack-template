@@ -26,6 +26,7 @@ config:
           - instance
       - match:
           selector: '{app_kubernetes_io_type="python"}'
+          pipeline_name: "python"
           stages:
             - json:
                 expressions:
@@ -33,6 +34,7 @@ config:
             - labels:
                 py_log_type:
             - match:
+                pipeline_name: "python-http-request"
                 selector: '{py_log_type="request"}'
                 stages:
                   - json:
@@ -55,11 +57,12 @@ config:
                       level:
                   - template:
                       source: output_msg
-                      template: '[{{ .remote_ip}} ] {{ .method }} {{ .request }} {{ .response_status}} | {{ .protocol}} | {{ .response_content_type }}'
+                      template: '[{{ .remote_ip}}] {{ .method }} {{ .request }} {{ .response_status}} | {{ .protocol}} | {{ .response_content_type }}'
                   - output:
                       source: output_msg
             - match:
                 selector: '{py_log_type="log"}'
+                pipeline_name: "python-logs"
                 stages:
                   - json:
                       expressions:
@@ -83,3 +86,37 @@ config:
                       template: '{{ or .msg "" }} {{ or .exc_info "" }}'
                   - output:
                       source: output_msg
+      - match:
+          selector: '{app="echo-server"}'
+          pipeline_name: "echo-server-logs"
+          stages:
+            - json:
+                expressions:
+                  http:
+                  msg:
+                  request:
+            - json:
+                expressions:
+                  method:
+                  protocol:
+                  originalUrl:
+                source: http
+            - json:
+                expressions:
+                  query:
+                  headers:
+                source: request
+            - json:
+                expressions:
+                  "user-agent": user_agent
+                source: headers
+            - static_labels:
+                level: 'INFO'
+            - labels:
+                method:
+                protocol:
+                originalUrl:
+                query:
+                user_agent:
+            - output:
+                source: msg

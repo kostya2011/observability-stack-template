@@ -9,3 +9,5 @@ provider "helm" {
     config_context = local.kube_config.config_context
   }
 }
+
+provider "random" {}

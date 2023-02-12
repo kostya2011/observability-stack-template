@@ -9,7 +9,7 @@ locals {
     config_path    = "~/.kube/config"
     config_context = "minikube"
   }
-  namespaces = ["demo-apps", "demo-monitoring"]
+  namespaces = ["demo-apps", "demo-monitoring", "demo-loki"]
   helm_releases_tmpl = {
     monitoring = {
       enabled         = var.monitoring_helm_enabled
@@ -40,6 +40,43 @@ locals {
         file("./demo-services/python-app/deployment/values.yaml")
       ]
     }
+    loki = {
+      enabled         = var.loki_helm_enabled
+      repository      = "https://grafana.github.io/helm-charts"
+      chart           = "loki"
+      version         = "4.4.2"
+      atomic          = false
+      cleanup_on_fail = false
+      namespace       = "demo-loki"
+      values = [
+        templatefile("./logging/values-loki.tfpl",
+          {
+            minio_enabled  = true
+            minio_replicas = 1
+            minio_user     = "root"
+            minio_password = random_string.minio_password.result
+            minio_size_gb  = 2
+        })
+      ]
+    }
+    promtail = {
+      enabled         = var.loki_helm_enabled
+      repository      = "https://grafana.github.io/helm-charts"
+      chart           = "promtail"
+      version         = "6.8.2"
+      atomic          = false
+      cleanup_on_fail = false
+      namespace       = "demo-loki"
+      values = [
+        templatefile("./logging/values-promtail.tfpl", {})
+      ]
+    }
   }
   helm_releases = { for k, v in local.helm_releases_tmpl : k => v if v.enabled == true }
+}
+
+resource "random_string" "minio_password" {
+  length           = 16
+  special          = true
+  override_special = "^*!"
 }

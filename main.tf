@@ -19,11 +19,12 @@ resource "helm_release" "this" {
   chart      = each.value.chart
   version    = try(each.value.version, null)
 
-  values          = try(each.value.values, null)
-  namespace       = try(each.value.namespace, "default")
-  verify          = try(each.value.verify, false)
-  atomic          = try(each.value.atomic, false)
-  cleanup_on_fail = try(each.value.cleanup_on_fail, false)
+  values            = try(each.value.values, null)
+  namespace         = try(each.value.namespace, "default")
+  verify            = try(each.value.verify, false)
+  atomic            = try(each.value.atomic, false)
+  cleanup_on_fail   = try(each.value.cleanup_on_fail, false)
+  dependency_update = true
 
 
   dynamic "set" {

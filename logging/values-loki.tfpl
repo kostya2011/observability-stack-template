@@ -10,10 +10,21 @@ loki:
   commonConfig:
     path_prefix: /var/loki
     replication_factor: 1
+  # https://github.com/grafana/loki/issues/4466#issuecomment-1078960849
   storage:
     bucketNames:
       chunks: chunks
     type: s3
+  limits_config:
+    retention_period: 10d
+    max_query_length: 721h
+  compactor:
+    working_directory: /var/loki/retention
+    shared_store: s3
+    compaction_interval: 10m
+    retention_enabled: true
+    retention_delete_delay: 30m
+    retention_delete_worker_count: 30
   schema_config:
     configs:
     - from: "2022-01-11"

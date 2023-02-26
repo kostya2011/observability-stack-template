@@ -5,8 +5,11 @@ import uvicorn
 import datetime
 import json_logging
 from fastapi import HTTPException
+from starlette_prometheus import metrics, PrometheusMiddleware
 
 app = fastapi.FastAPI()
+app.add_middleware(PrometheusMiddleware)
+app.add_route("/metrics", metrics)
 json_logging.init_fastapi(enable_json=True)
 json_logging.init_request_instrument(app)
 

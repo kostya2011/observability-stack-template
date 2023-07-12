@@ -1,15 +1,3 @@
-resource "kubernetes_namespace" "this" {
-  for_each = toset(local.namespaces)
-
-  metadata {
-    labels = {
-      purpose = each.key
-    }
-
-    name = each.key
-  }
-}
-
 # Helm releases
 resource "helm_release" "this" {
   for_each = local.helm_releases
@@ -25,6 +13,7 @@ resource "helm_release" "this" {
   atomic            = try(each.value.atomic, false)
   cleanup_on_fail   = try(each.value.cleanup_on_fail, false)
   dependency_update = true
+  create_namespace  = true
 
 
   dynamic "set" {

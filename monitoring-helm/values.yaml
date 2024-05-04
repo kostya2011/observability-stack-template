@@ -30,10 +30,10 @@ prometheus:
     resources:
       limits:
         cpu: 256m
-        memory: 256Mi
+        memory: 1024Mi
       requests:
         cpu: 256m
-        memory: 256Mi
+        memory: 1024Mi
     # https://github.com/prometheus-community/helm-charts/issues/2420
     securityContext:
       runAsUser: 0

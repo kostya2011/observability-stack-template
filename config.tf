@@ -15,8 +15,8 @@ locals {
       enabled         = var.monitoring_helm_enabled
       chart           = "./monitoring-helm"
       namespace       = "demo-monitoring"
-      atomic          = true
-      cleanup_on_fail = true
+      atomic          = false
+      cleanup_on_fail = false
       values = [
         file("./monitoring-helm/values.yaml")
       ]
@@ -44,7 +44,7 @@ locals {
       enabled         = var.loki_helm_enabled
       repository      = "https://grafana.github.io/helm-charts"
       chart           = "loki"
-      version         = "4.4.2"
+      version         = "6.5.0"
       atomic          = false
       cleanup_on_fail = false
       namespace       = "demo-loki"
@@ -53,8 +53,6 @@ locals {
           {
             minio_enabled  = true
             minio_replicas = 1
-            minio_user     = "root"
-            minio_password = random_string.minio_password.result
             minio_size_gb  = 2
         })
       ]
@@ -63,7 +61,7 @@ locals {
       enabled         = var.loki_helm_enabled
       repository      = "https://grafana.github.io/helm-charts"
       chart           = "promtail"
-      version         = "6.8.2"
+      version         = "6.15.5"
       atomic          = false
       cleanup_on_fail = false
       namespace       = "demo-loki"
@@ -73,10 +71,4 @@ locals {
     }
   }
   helm_releases = { for k, v in local.helm_releases_tmpl : k => v if v.enabled == true }
-}
-
-resource "random_string" "minio_password" {
-  length           = 16
-  special          = true
-  override_special = "^*!"
 }

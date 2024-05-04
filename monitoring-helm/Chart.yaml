@@ -5,8 +5,8 @@ description: A Helm chart for Kubernetes
 version: 0.1.0
 dependencies:
   - name: prometheus
-    version: 15.14.x
+    version: 25.20.x
     repository: https://prometheus-community.github.io/helm-charts
   - name: grafana
-    version: 6.40.x
+    version: 7.3.x
     repository: https://grafana.github.io/helm-charts

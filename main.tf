@@ -23,8 +23,4 @@ resource "helm_release" "this" {
       value = set.value["value"]
     }
   }
-
-  depends_on = [
-    kubernetes_namespace.this
-  ]
 }

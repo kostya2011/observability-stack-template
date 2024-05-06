@@ -16,13 +16,27 @@ service_ports:
 
 resources:
   requests:
-    memory: "64Mi"
+    memory: "128Mi"
     cpu: "64m"
   limits:
-    memory: "64Mi"
+    memory: "128Mi"
     cpu: "64m"
 
 monitoring:
   enabled: true
   metrics_path: "/metrics"
   metrics_port_number: 5000
+
+env: []
+dns:
+  config: {}
+  policy: ""
+affinity: {}
+tolerations: {}
+labels: {}
+annotations: {}
+
+check_recommended: true
+# SECURITY CONETEXR
+# PRIORITY CLASS
+# UPDATE STRATEHY

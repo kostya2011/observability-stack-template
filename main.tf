@@ -13,8 +13,7 @@ resource "helm_release" "this" {
   atomic            = try(each.value.atomic, false)
   cleanup_on_fail   = try(each.value.cleanup_on_fail, false)
   dependency_update = true
-  create_namespace  = true
-
+  create_namespace  = try(each.value.create_namespace, true)
 
   dynamic "set" {
     for_each = try(each.value.override_values, {})

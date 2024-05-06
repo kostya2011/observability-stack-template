@@ -10,12 +10,3 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_docs
-  - repo: https://github.com/psf/black
-    rev: stable
-    hooks:
-      - id: black
-        language_version: python3.10
-  - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0
-    hooks:
-      - id: flake8

@@ -95,3 +95,13 @@ resources:
 {{- end }}
 {{- end }}
 {{- end }}
+
+{{/*
+priority class name
+*/}}
+{{- define "py_log_demo.priorityClassName" -}}
+{{- $pcn := .Values.priorityClassName -}}
+{{- if $pcn }}
+priorityClassName: {{ $pcn }}
+{{- end }}
+{{- end }}

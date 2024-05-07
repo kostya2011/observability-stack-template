@@ -8,6 +8,10 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   replicas: {{ .Values.replicas | default 1 }}
+  {{-  with .Values.updateStrategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   selector:
     matchLabels:
     {{- include "py_log_demo.selectorLabels" . | nindent 8 }}
@@ -34,7 +38,7 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
         {{- with .Values.env }}
-        {{ toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         dnsPolicy: {{ .Values.dns.policy | default "Default" }}
         {{- with .Values.dns.config }}
@@ -49,5 +53,10 @@ spec:
         tolerations:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         {{- include "py_log_demo.resources" . | nindent 8 }}
+        {{- include "py_log_demo.priorityClassName" . | nindent 8 }}
         imagePullPolicy: {{ .Values.imagePullPolicy | default "IfNotPresent" }}

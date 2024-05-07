@@ -20,12 +20,23 @@ resources:
     cpu: "64m"
   limits:
     memory: "128Mi"
-    cpu: "64m"
 
 monitoring:
   enabled: true
   metrics_path: "/metrics"
   metrics_port_number: 5000
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 3000
+  fsGroup: 2000
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 1
 
 env: []
 dns:
@@ -35,8 +46,6 @@ affinity: {}
 tolerations: {}
 labels: {}
 annotations: {}
+priorityClassName: ""
 
 check_recommended: true
-# SECURITY CONETEXR
-# PRIORITY CLASS
-# UPDATE STRATEHY

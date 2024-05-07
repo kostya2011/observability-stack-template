@@ -33,7 +33,7 @@ locals {
     python-demo-logs-app = {
       enabled          = var.py_logging_helm_enabled
       chart            = "./demo-services/python-app/deployment"
-      namespace        = "demo-monitoring"
+      namespace        = "demo-apps"
       create_namespace = false
       atomic           = false
       cleanup_on_fail  = true

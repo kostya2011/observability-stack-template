@@ -42,3 +42,6 @@ annotations: {}
 priorityClassName: ""
 
 check_recommended: true
+
+pdb:
+  maxUnavailable: 1

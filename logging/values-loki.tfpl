@@ -112,3 +112,50 @@ minio:
     runAsNonRoot: false
     runAsGroup: 0
     fsGroup: 0
+
+# Add job for MinIO as extra object due to https://github.com/grafana/loki/issues/9634#issuecomment-1947898332
+extraObjects:
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    name: loki-minio-make-bucket-job
+    namespace: "demo-loki"
+    labels:
+      app: minio-make-bucket-job
+      chart: minio-4.0.15
+      release: loki
+      heritage: Helm
+  spec:
+    template:
+      metadata:
+        labels:
+          app: minio-job
+          release: loki
+      spec:
+        restartPolicy: OnFailure
+        volumes:
+          - name: minio-configuration
+            projected:
+              sources:
+              - configMap:
+                  name: loki-minio
+              - secret:
+                  name: loki-minio
+
+        serviceAccountName: minio-sa
+        containers:
+        - name: minio-mc
+          image: "quay.io/minio/mc:RELEASE.2022-09-16T09-16-47Z"
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "/config/initialize"]
+          env:
+            - name: MINIO_ENDPOINT
+              value: loki-minio
+            - name: MINIO_PORT
+              value: "9000"
+          volumeMounts:
+            - name: minio-configuration
+              mountPath: /config
+          resources:
+            requests:
+              memory: 128M

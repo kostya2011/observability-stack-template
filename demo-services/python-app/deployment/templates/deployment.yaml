@@ -3,7 +3,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-  {{- include "py_log_demo.labels" . | nindent 4 }}
+    {{- include "py_log_demo.labels" . | nindent 4 }}
+  annotations:
+    {{- include "py_log_demo.annotations" . | nindent 4 }}
   name: {{ .Values.app }}
   namespace: {{ .Values.namespace }}
 spec:
@@ -27,7 +29,11 @@ spec:
       - image: {{ .Values.image }}
         name: "main"
         ports:
-          {{- toYaml (.Values.container_ports) | nindent 8 }}
+        - containerPort: 5000
+          name: "http"
+        {{- with .Values.container_ports }}
+        {{- toYaml .Values.container_ports | nindent 8 }}
+        {{- end }}
         env:
         - name: POD_NAME
           valueFrom:

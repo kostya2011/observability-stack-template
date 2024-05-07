@@ -73,7 +73,7 @@ app.kubernetes.io/type: {{ .Values.type }}
 Monitoring annotations
 */}}
 {{- define "py_log_demo.monitoring_annotations" -}}
-prometheus.io/scrape: true
+prometheus.io/scrape: "true"
 prometheus.io/path: {{ .Values.monitoring.metrics_path | default "/metrics" | quote }}
 prometheus.io/port: {{ .Values.monitoring.metrics_port_number | default "8080" | quote }}
 {{- end }}

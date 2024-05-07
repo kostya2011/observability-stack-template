@@ -5,10 +5,17 @@ metadata:
   name: {{ .Values.app }}
   namespace: {{ .Values.namespace }}
   labels:
-{{ include "py_log_demo.labels" . | indent 4 }}
+    {{- include "py_log_demo.labels" . | nindent 4 }}
+  annotations:
+    {{- include "py_log_demo.annotations" . | nindent 4 }}
 spec:
   ports:
-{{ toYaml (.Values.service_ports) | indent 4 }}
+   - port: 80
+     targetPort: http
+     protocol: TCP
+  {{- with .Values.service_ports }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
   selector:
-{{ include "py_log_demo.selectorLabels" . | indent 4 }}
+    {{- include "py_log_demo.selectorLabels" . | nindent 4 }}
   type: ClusterIP

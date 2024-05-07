@@ -1,18 +1,11 @@
 ---
 app: demo-app-python
 namespace: demo-apps
-image: local/python-logs-demo-app:v1.0.0
+image: local/python-logs-demo-app:v1.0.1
 type: python
 
-container_ports:
-  - containerPort: 5000
-    name: "main"
-
-service_ports:
-  - port: 5000
-    targetPort: 5000
-    protocol: TCP
-    name: "main"
+container_ports: []
+service_ports: []
 
 resources:
   requests:

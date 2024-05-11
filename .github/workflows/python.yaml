@@ -1,17 +1,21 @@
-name: build
-on: push
+---
+# yamllint disable rule:line-length
+name: python-app-ci
+
+on:
+  pull_request:
+    paths:
+      - "demo-services/python-app/**"
+
 jobs:
-  job1:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - id: set-matrix
-        run: echo "matrix={\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}" >> $GITHUB_OUTPUT
-  job2:
-    needs: job1
-    runs-on: ubuntu-latest
+  test:
     strategy:
-      matrix: ${{ fromJSON(needs.job1.outputs.matrix) }}
+      matrix:
+        include::
+          - command: black
+            args: '--check --no-color --exclude "deployment/*"'
+            os: "ubuntu"
+    runs-on: ${{ matrix.os }}
     steps:
-      - run: echo "Matrix - Project ${{ matrix.project }}, Config ${{ matrix.config }}"
+      - name: ${{ matrix.command }}
+        run: ${{ matrix.command }} ${{ matrix.args }}

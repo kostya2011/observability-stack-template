@@ -1,11 +1,14 @@
 ---
 # yamllint disable rule:line-length
-name: lint
+name: main
 
-on: push # yamllint disable-line rule:truthy
+on:
+  push:
+    paths-ignore:
+      - "demo-services/**" # Ignore demo-services as they have their own workflow
 
 env:
-  TERRAFORM_VERSION: 1.6.4
+  TERRAFORM_VERSION: 1.8.3
   TERRAFORM_DOCS_VERSION: 0.16.0
 
 jobs:
@@ -23,11 +26,13 @@ jobs:
           wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
           echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
           sudo apt-get update && sudo apt-get install -y terraform=${TERRAFORM_VERSION}
+
           # Install terraform docs
           curl -Lo ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-$(uname)-amd64.tar.gz
           tar -xzf terraform-docs.tar.gz
           chmod +x terraform-docs
           mv terraform-docs $HOME/.local/bin
+
           # Add local executable to PATH
           # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#example-8
           echo "$HOME/.local/bin" >> $GITHUB_PATH

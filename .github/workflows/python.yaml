@@ -11,7 +11,7 @@ jobs:
   test:
     strategy:
       matrix:
-        include::
+        include:
           - command: black
             args: ["--check", "--no-color", "--exclude", "deployment/*"]
             os: "ubuntu-latest"

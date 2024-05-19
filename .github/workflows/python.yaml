@@ -13,11 +13,9 @@ jobs:
       matrix:
         include:
           - command: black
-            args: "--check --no-color --exclude deployment/*"
+            args: "--check --no-color --exclude deployment/* ."
             os: "ubuntu-latest"
     runs-on: ${{ matrix.os }}
     steps:
-      - name: ${{ matrix.command }}
-        run: |
-          echo ${{ matrix.command }} 
-          echo ${{ matrix.args }}
+      - name: Running ${{ matrix.command }}
+        run: ${{ matrix.command }} ${{ matrix.args }}

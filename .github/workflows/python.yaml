@@ -36,14 +36,14 @@ jobs:
               tar -xzf kubeconform.tar.gz -C /usr/local/bin
               rm kubeconform.tar.gz
 
-              for values in $(ls kubeconform-values/); do
+              while read values; done 
                 echo "############## Run kubencnform for $values ##############"
                 helm template -f kubeconform-values/$values  . |\
                 kubeconform -schema-location default \
                 -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' \
                 -summary -output json
-                echo "#########################################"
-              done
+                echo "#########################################################"
+              done <<< $(ls kubeconform-values/)
             os: "ubuntu-latest"
     runs-on: ${{ matrix.os }}
     steps:

@@ -17,7 +17,7 @@ jobs:
             working_directory: "demo-services/python-app/"
             script: |
               pip install black
-              black --check --no-color --exclude deployment/* .
+              black --check --no-color --exclude "deployment/*" .
             os: "ubuntu-latest"
     runs-on: ${{ matrix.os }}
     steps:

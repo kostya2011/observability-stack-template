@@ -13,7 +13,10 @@ app.add_route("/metrics", metrics)
 json_logging.init_fastapi(enable_json=True)
 json_logging.init_request_instrument(app)
 
-# init the logger as usual
+
+print ('')
+# 
+# it the logger as usual
 logger = logging.getLogger("test-logger")
 logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler(sys.stdout))

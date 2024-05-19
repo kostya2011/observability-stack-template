@@ -58,7 +58,7 @@ app.kubernetes.io/type: {{ .Values.type }}
 Deployment annotations
 */}}
 {{- define "py_log_demo.annotations" -}}
-{{- range $key, $value := .annotations }}
+{{- range $key, $value := .Values.annotations }}
 {{ $key }}: {{ quote $value }}
 {{- end }}
 app.kubernetes.io/name: {{ include "py_log_demo.name" . }}

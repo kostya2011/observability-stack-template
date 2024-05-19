@@ -31,6 +31,7 @@ jobs:
             working_directory: "demo-services/python-app/deployment"
             script: |
               go install github.com/yannh/kubeconform/cmd/kubeconform@latest
+              export PATH="$GOPATH/bin:$PATH"
               for values in $(ls kubeconform-values/); do
                 echo "############## Run kubencnform for $values ##############"
                 helm template -f kubeconform-values/$values  . |\

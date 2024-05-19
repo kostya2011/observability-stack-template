@@ -28,7 +28,7 @@ jobs:
               yamllint --no-warnings ./
             os: "ubuntu-latest"
           - check_name: kubeconform
-            working_directory: "demo-services/python-app/"
+            working_directory: "demo-services/python-app/deployment"
             script: |
               go install github.com/yannh/kubeconform/cmd/kubeconform@latest
               for values in $(ls kubeconform-values/); do

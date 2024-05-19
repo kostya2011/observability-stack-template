@@ -20,6 +20,7 @@ jobs:
             os: "ubuntu-latest"
     runs-on: ${{ matrix.os }}
     steps:
+      - uses: actions/checkout@v3
       - name: Running ${{ matrix.check_name }}
         working-directory: ${{ matrix.working_directory }}
         run: |

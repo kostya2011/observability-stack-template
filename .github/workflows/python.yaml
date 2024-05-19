@@ -21,7 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Running ${{ matrix.check_name }}
-        working_directory: ${{ matrix.working_directory }}
+        working-directory: ${{ matrix.working_directory }}
         run: |
           echo '${{ matrix.script }}' > script.sh
           bash -c "$(cat script.sh)"

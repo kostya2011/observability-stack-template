@@ -19,7 +19,7 @@ jobs:
             os: "ubuntu-latest"
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Running ${{ matrix.command }}
+      - name: Running ${{ matrix.check_name }}
         run: |
           echo ${{ matrix.script }} > script.sh
           cat script.sh

@@ -13,13 +13,11 @@ jobs:
       matrix:
         include:
           - command: black
-            args: ["--check", "--no-color", "--exclude", "deployment/*"]
+            args: "--check --no-color --exclude deployment/*"
             os: "ubuntu-latest"
     runs-on: ${{ matrix.os }}
     steps:
       - name: ${{ matrix.command }}
         run: |
           echo ${{ matrix.command }} 
-          for arg in "${{ matrix.args[@] }}"; do
-            echo $arg
-          done
+          echo ${{ matrix.args }}

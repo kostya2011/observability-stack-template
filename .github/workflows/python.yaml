@@ -11,6 +11,7 @@ jobs:
   test:
     strategy:
       matrix:
+        # Generate jobs for running tests
         include:
           - check_name: black
             working_directory: "demo-services/python-app/"

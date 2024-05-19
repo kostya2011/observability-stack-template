@@ -19,6 +19,17 @@ jobs:
               pip install black
               black --check --no-color --exclude "deployment/*" .
             os: "ubuntu-latest"
+          - check_name: yamllint
+            working_directory: "demo-services/python-app/"
+            script: |
+              yamllint --no-warnings ./
+            os: "ubuntu-latest"
+          # - check_name: kubeconform
+          #   working_directory: "demo-services/python-app/"
+          #   script: |
+          #     pip install black
+          #     black --check --no-color --exclude "deployment/*" .
+          #   os: "ubuntu-latest"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3

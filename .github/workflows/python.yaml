@@ -13,6 +13,7 @@ jobs:
       matrix:
         include:
           - check_name: black
+            working_directory: "demo-services/python-app/"
             script: |
               pip install black
               black --check --no-color --exclude deployment/* .
@@ -20,6 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Running ${{ matrix.check_name }}
+        working_directory: ${{ matrix.working_directory }}
         run: |
           echo '${{ matrix.script }}' > script.sh
           bash -c "$(cat script.sh)"

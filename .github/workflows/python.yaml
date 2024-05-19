@@ -22,6 +22,9 @@ jobs:
           - check_name: yamllint
             working_directory: "demo-services/python-app/"
             script: |
+              echo "############## Run lint for ###########"
+              yamllint --list-files ./
+              echo "#######################################"
               yamllint --no-warnings ./
             os: "ubuntu-latest"
           # - check_name: kubeconform

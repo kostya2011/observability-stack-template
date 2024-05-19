@@ -1,0 +1,47 @@
+---
+app: demo-app-python
+namespace: demo-apps
+image: local/python-logs-demo-app:v1.0.1
+type: python
+
+container_ports: []
+service_ports: []
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "64m"
+  limits:
+    memory: "128Mi"
+
+monitoring:
+  enabled: true
+  metrics_path: "/metrics"
+  metrics_port_number: 5000
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 3000
+  fsGroup: 2000
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 1
+
+env: []
+dns:
+  config: {}
+  policy: ""
+affinity: {}
+tolerations: {}
+labels: {}
+annotations: {}
+priorityClassName: ""
+
+check_recommended: true
+
+pdb:
+  maxUnavailable: 1

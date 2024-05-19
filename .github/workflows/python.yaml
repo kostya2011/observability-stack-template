@@ -15,11 +15,11 @@ jobs:
           - check_name: black
             script: |
               pip install black
-              black--check --no-color --exclude deployment/* .
+              black --check --no-color --exclude deployment/* .
             os: "ubuntu-latest"
     runs-on: ${{ matrix.os }}
     steps:
       - name: Running ${{ matrix.check_name }}
         run: |
-          echo ${{ matrix.script }} > script.sh
+          echo '${{ matrix.script }}' > script.sh
           cat script.sh

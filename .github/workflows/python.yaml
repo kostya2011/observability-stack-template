@@ -20,4 +20,6 @@ jobs:
       - name: ${{ matrix.command }}
         run: |
           echo ${{ matrix.command }} 
-          echo ${{ matrix.args }}
+          for arg in ${{ matrix.args }}; do
+            echo $arg
+          done

@@ -12,10 +12,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - command: black
-            args: "--check --no-color --exclude deployment/* ."
+          - check_name: black
+            script: |
+              pip install black
+              black--check --no-color --exclude deployment/* .
             os: "ubuntu-latest"
     runs-on: ${{ matrix.os }}
     steps:
       - name: Running ${{ matrix.command }}
-        run: ${{ matrix.command }} ${{ matrix.args }}
+        run: |
+          echo ${{ matrix.script }} > script.sh
+          cat script.sh

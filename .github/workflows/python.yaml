@@ -22,20 +22,27 @@ jobs:
           - check_name: yamllint
             working_directory: "demo-services/python-app/"
             script: |
-              echo "############## Run lint for ###########"
+              echo "############## Run lint for ##############"
               yamllint --list-files ./
-              echo "#######################################"
+              echo "#########################################"
               yamllint --no-warnings ./
             os: "ubuntu-latest"
-          # - check_name: kubeconform
-          #   working_directory: "demo-services/python-app/"
-          #   script: |
-          #     pip install black
-          #     black --check --no-color --exclude "deployment/*" .
-          #   os: "ubuntu-latest"
+          - check_name: kubeconform
+            working_directory: "demo-services/python-app/"
+            script: |
+              go install github.com/yannh/kubeconform/cmd/kubeconform@latest
+              for values in $(ls kubeconform-values/); do
+                echo "############## Run kubencnform for $values ##############"
+                helm template -f kubeconform-values/$values  . |\
+                kubeconform -schema-location default \
+                -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' \
+                -summary -output json
+                echo "#########################################"
+              done
+            os: "ubuntu-latest"
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Running ${{ matrix.check_name }}
         working-directory: ${{ matrix.working_directory }}
         run: |

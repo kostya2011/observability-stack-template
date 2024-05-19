@@ -36,7 +36,7 @@ jobs:
               tar -xzf kubeconform.tar.gz -C /usr/local/bin
               rm kubeconform.tar.gz
 
-              while read values; done 
+              while read values; do
                 echo "############## Run kubencnform for $values ##############"
                 helm template -f kubeconform-values/$values  . |\
                 kubeconform -schema-location default \

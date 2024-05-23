@@ -9,11 +9,7 @@ locals {
     config_path    = "~/.kube/config"
     config_context = "minikube"
   }
-  namespaces = [
-    "demo-apps",
-    "demo-monitoring",
-    "demo-loki"
-  ]
+  namespaces = ["demo-apps", "demo-monitoring", "demo-loki"]
   helm_releases_tmpl = {
     monitoring = {
       enabled         = var.monitoring_helm_enabled

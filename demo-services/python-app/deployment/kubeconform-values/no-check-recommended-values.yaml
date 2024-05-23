@@ -43,5 +43,4 @@ priorityClassName: ""
 
 check_recommended: false
 
-pdb:
-  maxUnavailable: 1
+pdb: {}

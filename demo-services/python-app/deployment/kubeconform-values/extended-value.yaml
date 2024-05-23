@@ -31,15 +31,43 @@ updateStrategy:
     maxUnavailable: 1
     maxSurge: 1
 
-env: []
+env:
+  - name: "VAR1"
+    value: "VAL1"
+  - name: "VAR2"
+    value: "VAL2"
 dns:
-  config: {}
-  policy: ""
-affinity: {}
-tolerations: {}
-labels: {}
-annotations: {}
-priorityClassName: ""
+  config:
+    nameservers:
+      - 8.8.8.8
+    searches:
+      - mydomain.com
+      - 20302040.xyz
+  policy: "None"
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: disktype
+              operator: In
+              values:
+                - ssd
+tolerations:
+  - key: "example-key"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+labels:
+  foo: "bar"
+  bar: "foo"
+
+annotations:
+  foo: "bar"
+  bar: "foo"
+
+priorityClassName: "high-priority"
 
 check_recommended: true
 

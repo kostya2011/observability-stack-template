@@ -16,12 +16,14 @@ jobs:
           - check_name: black
             working_directory: "demo-services/python-app/"
             script: |
+              set -euo pipefail
               pip install black
               black --check --no-color --exclude "deployment/*" .
             os: "ubuntu-latest"
           - check_name: yamllint
             working_directory: "demo-services/python-app/"
             script: |
+              set -euo pipefail
               echo "############## Run lint for ##############"
               yamllint --list-files ./
               echo "#########################################"

@@ -10,12 +10,12 @@ metadata:
     {{- include "py_log_demo.annotations" . | nindent 4 }}
 spec:
   ports:
-   - port: 80
-     targetPort: http
-     protocol: TCP
-  {{- with .Values.service_ports }}
-  {{- toYaml . | nindent 2 }}
-  {{- end }}
+    - port: 80
+      targetPort: http
+      protocol: TCP
+    {{- with .Values.service_ports }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   selector:
     {{- include "py_log_demo.selectorLabels" . | nindent 4 }}
   type: ClusterIP

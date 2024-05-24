@@ -84,15 +84,11 @@ Evaluate resources
 */}}
 {{- define "py_log_demo.resources" -}}
 {{- if .Values.check_recommended }}
-{{- with (required "Specify resources for deployment to install chart." .Values.resources) -}}
+{{ $resources := (required "Specify resources for deployment to install chart." .Values.resources) }}
+{{- end }}
+{{- with .Values.resources -}}
 resources:
   {{- toYaml . | nindent 2 }}
-{{- end }}
-{{- else }}
-{{- with  .Values.resources -}}
-resources:
-  {{- toYaml . | nindent 2 }}
-{{- end }}
 {{- end }}
 {{- end }}
 

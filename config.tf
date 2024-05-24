@@ -37,9 +37,9 @@ locals {
       create_namespace = false
       atomic           = false
       cleanup_on_fail  = true
-      values = [
-        file("./demo-services/python-app/deployment/values.yaml")
-      ]
+      override_values = {
+        "pdb.maxUnavailable" = "1"
+      }
     }
     loki = {
       enabled         = var.loki_helm_enabled

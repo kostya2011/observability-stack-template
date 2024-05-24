@@ -6,7 +6,7 @@ on:
   push:
     paths-ignore:
       - "demo-services/**" # Ignore demo-services as they have their own workflow
-      - ".github/**"
+      # - ".github/**"
 
 env:
   TERRAFORM_VERSION: 1.8.1
@@ -35,5 +35,8 @@ jobs:
           # Add local executable to PATH
           # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#example-8
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+
+          terraform --version
       - name: Run pre-commit
         run: pre-commit run --all-files

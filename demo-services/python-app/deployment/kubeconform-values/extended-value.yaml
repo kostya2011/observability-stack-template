@@ -4,8 +4,13 @@ namespace: demo-apps
 image: local/python-logs-demo-app:v1.0.1
 type: python
 
-container_ports: []
-service_ports: []
+container_ports:
+  - containerPort: 5001
+    name: "tcp"
+service_ports:
+  - port: 8080
+    targetPort: tcp
+    protocol: TCP
 
 resources:
   requests:

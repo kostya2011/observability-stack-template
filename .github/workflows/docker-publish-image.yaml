@@ -39,7 +39,6 @@ jobs:
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
-        if: "${{ inputs.scan == 'true' }}"
         with:
           name: python-logs-demo-app.tar
           path: /tmp

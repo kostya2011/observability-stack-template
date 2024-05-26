@@ -24,9 +24,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up docker buildx
-        uses: docker/setup-buildx-action@v5
+        uses: docker/setup-buildx-action@v3
       - name: Build
-        uses: docker/build-push-action
+        uses: docker/build-push-action@v5
         with:
           context: .
           tags: python-logs-demo-app:${GITHUB_SHA}-${GITHUB_RUN_ID}

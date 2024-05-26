@@ -46,6 +46,10 @@ jobs:
         with:
           name: python-logs-demo-app.tar
           path: /tmp
+      - name: Load image
+        run: |
+          docker load --input /tmp/myimage.tar
+          docker image ls -a
       # - name: Run Trivy vulnerability scanner
       #   uses: aquasecurity/trivy-action@0.21.0
       #   if: "${{ inputs.scan == 'true' }}"
@@ -57,5 +61,3 @@ jobs:
       #   if: "${{ inputs.scan == 'true' && always() || false }}"
       #   with:
       #     sarif_file: "trivy-results.sarif"
-      - name: Echo
-        run: ls /tmp

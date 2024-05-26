@@ -55,8 +55,13 @@ jobs:
         with:
           image-ref: "python-logs-demo-app:${{ github.sha }}-${{ github.run_id }}"
           severity: "CRITICAL,HIGH"
-      # - name: Upload Trivy scan results to GitHub Security tab
-      #   uses: github/codeql-action/upload-sarif@v3
-      #   if: "${{ inputs.scan == 'true' && always() || false }}"
-      #   with:
-      #     sarif_file: "trivy-results.sarif"
+          format: "sarif"
+          output: "trivy-results.sarif"
+          exit-code: 0 # Do not fail pipeline, just fail
+          limit-severities-for-sarif: true
+          ignore-unfixed: true
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: "${{ inputs.scan == 'true' && always() || false }}"
+        with:
+          sarif_file: "trivy-results.sarif"

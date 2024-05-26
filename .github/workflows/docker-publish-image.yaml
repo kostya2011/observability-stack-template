@@ -44,7 +44,7 @@ jobs:
         uses: actions/download-artifact@v4
         if: "${{ inputs.scan == 'true' }}"
         with:
-          name: python-logs-demo-app
+          name: python-logs-demo-app.tar
           path: /tmp
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.21.0

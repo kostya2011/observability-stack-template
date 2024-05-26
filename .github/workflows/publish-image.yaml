@@ -1,0 +1,55 @@
+---
+# yamllint disable rule:line-length
+name: python-image-publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      scan:
+        description: "If true - also scans image before publishing"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+env:
+  TRIVY_VERSION: 0.18.3
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up docker buildx
+        uses: docker/setup-buildx-action@v5
+      - name: Build
+        uses: docker/build-push-action
+        with:
+          context: .
+          tags: python-logs-demo-app:${GITHUB_SHA}-${GITHUB_RUN_ID}
+          outputs: type=docker,dest=/tmp/python-logs-demo-app.tar
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-logs-demo-app
+          path: /tmp/python-logs-demo-app.tar
+  scan:
+    runs-on: ubuntu-latest
+    if: inputs.scan == "true"
+    needs: build
+    steps:
+      - name: Install trivy
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.deb
+          dpkg -i trivy_${TRIVY_VERSION}_Linux-64bit.deb
+  publish:
+    needs: scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install trivy
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.deb
+          dpkg -i trivy_${TRIVY_VERSION}_Linux-64bit.deb

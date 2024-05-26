@@ -6,7 +6,6 @@ on:
   push:
     paths-ignore:
       - "demo-services/**" # Ignore demo-services as they have their own workflow
-      # - ".github/**"
 
 env:
   TERRAFORM_VERSION: 1.8.4

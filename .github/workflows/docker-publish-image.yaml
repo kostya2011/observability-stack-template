@@ -29,7 +29,7 @@ jobs:
       - name: Build
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: demo-services/python-app/
           tags: python-logs-demo-app:${{ github.sha }}-${{ github.run_id }}
           outputs: type=docker,dest=/tmp/python-logs-demo-app.tar
       - name: Upload artifact

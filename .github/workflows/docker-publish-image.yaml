@@ -26,17 +26,17 @@ jobs:
         uses: actions/checkout@v4
       - name: Set up docker buildx
         uses: docker/setup-buildx-action@v3
-      - name: Build
-        uses: docker/build-push-action@v5
-        with:
-          context: demo-services/python-app/
-          tags: python-logs-demo-app:${{ github.sha }}-${{ github.run_id }}
-          outputs: type=docker,dest=/tmp/python-logs-demo-app.tar
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-logs-demo-app
-          path: /tmp/python-logs-demo-app.tar
+      # - name: Build
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: demo-services/python-app/
+      #     tags: python-logs-demo-app:${{ github.sha }}-${{ github.run_id }}
+      #     outputs: type=docker,dest=/tmp/python-logs-demo-app.tar
+      # - name: Upload artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: python-logs-demo-app
+      #     path: /tmp/python-logs-demo-app.tar
   scan:
     runs-on: ubuntu-latest
     if: "${{ github.event.inputs.scan == 'true' }}"

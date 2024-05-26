@@ -13,7 +13,6 @@ on:
         options:
           - "true"
           - "false"
-  pull_request:
 
 env:
   TRIVY_VERSION: 0.18.3
@@ -26,31 +25,36 @@ jobs:
         uses: actions/checkout@v4
       - name: Set up docker buildx
         uses: docker/setup-buildx-action@v3
-      # - name: Build
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     context: demo-services/python-app/
-      #     tags: python-logs-demo-app:${{ github.sha }}-${{ github.run_id }}
-      #     outputs: type=docker,dest=/tmp/python-logs-demo-app.tar
-      # - name: Upload artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: python-logs-demo-app
-      #     path: /tmp/python-logs-demo-app.tar
-  scan:
+      - name: Build
+        uses: docker/build-push-action@v5
+        with:
+          context: demo-services/python-app/
+          tags: python-logs-demo-app:${{ github.sha }}-${{ github.run_id }}
+          outputs: type=docker,dest=/tmp/python-logs-demo-app.tar
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-logs-demo-app
+          path: /tmp/python-logs-demo-app.tar
+  publish:
     runs-on: ubuntu-latest
-    if: "${{ inputs.scan == 'true' }}"
     needs: build
     steps:
-      - name: Install trivy
-        run: |
-          wget https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.deb
-          dpkg -i trivy_${TRIVY_VERSION}_Linux-64bit.deb
-  publish:
-    needs: scan
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install trivy
-        run: |
-          wget https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.deb
-          dpkg -i trivy_${TRIVY_VERSION}_Linux-64bit.deb
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        if: "${{ inputs.scan == 'true' }}"
+        with:
+          name: python-logs-demo-app
+          path: /tmp
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.20.0
+        if: "${{ inputs.scan == 'true' }}"
+        with:
+          input: /tmp/python-logs-demo-app.tar
+          format: "sarif"
+          output: "trivy-results.sarif"
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        if: "${{ inputs.scan == 'true' && always() || false }}"
+        with:
+          sarif_file: "trivy-results.sarif"

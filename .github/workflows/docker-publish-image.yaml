@@ -34,7 +34,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: python-logs-demo-app
+          name: python-logs-demo-app.tar
           path: /tmp/python-logs-demo-app.tar
   publish:
     runs-on: ubuntu-latest

@@ -39,7 +39,7 @@ jobs:
       #     path: /tmp/python-logs-demo-app.tar
   scan:
     runs-on: ubuntu-latest
-    if: "${{ github.event.inputs.scan == 'true' }}"
+    if: "${{ inputs.scan == 'true' }}"
     needs: build
     steps:
       - name: Install trivy

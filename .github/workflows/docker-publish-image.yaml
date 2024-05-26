@@ -51,12 +51,11 @@ jobs:
         if: "${{ inputs.scan == 'true' }}"
         with:
           input: /tmp/python-logs-demo-app.tar
-          format: "sarif"
-          output: "trivy-results.sarif"
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
-        if: "${{ inputs.scan == 'true' && always() || false }}"
-        with:
-          sarif_file: "trivy-results.sarif"
+          severity: "CRITICAL,HIGH"
+      # - name: Upload Trivy scan results to GitHub Security tab
+      #   uses: github/codeql-action/upload-sarif@v3
+      #   if: "${{ inputs.scan == 'true' && always() || false }}"
+      #   with:
+      #     sarif_file: "trivy-results.sarif"
       - name: Echo
         run: echo test

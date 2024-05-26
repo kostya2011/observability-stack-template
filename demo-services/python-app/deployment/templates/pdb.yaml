@@ -1,0 +1,15 @@
+---
+{{- if .Values.check_recommended }}
+{{- $pdb := (required "Specify pdb for deployment to install chart." .Values.pdb) }}
+{{- end }}
+{{ with .Values.pdb }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ $.Values.app }}
+spec:
+  maxUnavailable: {{ .maxUnavailable }}
+  selector:
+    matchLabels:
+      {{- include "py_log_demo.selectorLabels" $ | nindent 6 }}
+{{- end }}

@@ -1,0 +1,73 @@
+---
+# yamllint disable rule:line-length
+name: python-image-publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      scan:
+        description: "If true - also scans image before publishing"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up docker buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build
+        uses: docker/build-push-action@v5
+        with:
+          context: demo-services/python-app/
+          tags: python-logs-demo-app:${{ github.sha }}-${{ github.run_id }}
+          outputs: type=docker,dest=/tmp/python-logs-demo-app.tar
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-logs-demo-app.tar
+          path: /tmp/python-logs-demo-app.tar
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: python-logs-demo-app.tar
+          path: /tmp
+      - name: Load image
+        run: |
+          docker load --input /tmp/python-logs-demo-app.tar
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.21.0
+        if: "${{ inputs.scan == 'true' }}"
+        with:
+          image-ref: "python-logs-demo-app:${{ github.sha }}-${{ github.run_id }}"
+          severity: "CRITICAL,HIGH"
+          format: "sarif"
+          output: "trivy-results.sarif"
+          exit-code: 0 # Do not fail pipeline, just fail
+          limit-severities-for-sarif: true
+          ignore-unfixed: true
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: "${{ inputs.scan == 'true' && always() || false }}"
+        with:
+          sarif_file: "trivy-results.sarif"
+      - name: "Login to GitHub Container Registry"
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+      - name: "Push demo app"
+        run: |
+          docker tag python-logs-demo-app:${GITHUB_SHA}-${GITHUB_RUN_ID} ghcr.io/${GITHUB_REPOSITORY_OWNER}/python-logs-demo-app:${GITHUB_SHA}-${GITHUB_RUN_ID}
+          docker push ghcr.io/${GITHUB_REPOSITORY_OWNER}/python-logs-demo-app:${GITHUB_SHA}-${GITHUB_RUN_ID}

@@ -35,13 +35,14 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "py_log_demo.labels" -}}
-helm.sh/chart: {{ include "py_log_demo.chart" . }}
-helm.sh/chart: {{ include "py_log_demo.chart" . }}
-{{ include "py_log_demo.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
+{{- if $.Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "py_log_demo.selectorLabels" $ }}
+{{- range $key, $value := .Values.labels }}
+{{ $key }}: {{ quote $value }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -57,10 +58,46 @@ app.kubernetes.io/type: {{ .Values.type }}
 Deployment annotations
 */}}
 {{- define "py_log_demo.annotations" -}}
+{{- range $key, $value := .Values.annotations }}
+{{ $key }}: {{ quote $value }}
+{{- end }}
 app.kubernetes.io/name: {{ include "py_log_demo.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/type: {{ .Values.type }}
-prometheus.io/scrape: {{ .Values.monitoring.enabled | default "false" | quote }}
+{{- if .Values.monitoring.enabled }}
+{{ include "py_log_demo.monitoring_annotations" .}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Monitoring annotations
+*/}}
+{{- define "py_log_demo.monitoring_annotations" -}}
+prometheus.io/scrape: "true"
 prometheus.io/path: {{ .Values.monitoring.metrics_path | default "/metrics" | quote }}
 prometheus.io/port: {{ .Values.monitoring.metrics_port_number | default "8080" | quote }}
+{{- end }}
+
+
+{{/*
+Evaluate resources
+*/}}
+{{- define "py_log_demo.resources" -}}
+{{- if .Values.check_recommended }}
+{{ $resources := (required "Specify resources for deployment to install chart." .Values.resources) }}
+{{- end }}
+{{- with .Values.resources -}}
+resources:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+
+{{/*
+priority class name
+*/}}
+{{- define "py_log_demo.priorityClassName" -}}
+{{- $pcn := .Values.priorityClassName -}}
+{{- if $pcn }}
+priorityClassName: {{ $pcn }}
+{{- end }}
 {{- end }}

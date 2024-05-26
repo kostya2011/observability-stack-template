@@ -1,0 +1,58 @@
+---
+# yamllint disable rule:line-length
+name: python-app-ci
+
+on:
+  pull_request:
+    paths:
+      - "demo-services/python-app/**"
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        # Generate jobs for running tests
+        include:
+          - check_name: black
+            working_directory: "demo-services/python-app/"
+            script: |
+              set -euo pipefail
+              pip install black
+              black --check --no-color --exclude "deployment/*" .
+            os: "ubuntu-latest"
+          - check_name: yamllint
+            working_directory: "demo-services/python-app/"
+            script: |
+              set -euo pipefail
+              echo "############## Run lint for ##############"
+              yamllint --list-files ./
+              echo "#########################################"
+              yamllint --no-warnings ./
+            os: "ubuntu-latest"
+          - check_name: kubeconform
+            working_directory: "demo-services/python-app/deployment"
+            script: |
+              set -euo pipefail
+              # Install
+              KUBECONFORM_VERSION="0.6.6"
+              wget -O kubeconform.tar.gz "https://github.com/yannh/kubeconform/releases/download/v${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz"
+              tar -xzf kubeconform.tar.gz -C /usr/local/bin
+              rm kubeconform.tar.gz
+
+              while read values; do
+                echo "############## Run kubencnform for $values ##############"
+                helm template -f kubeconform-values/$values  . |\
+                kubeconform -schema-location default \
+                -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' \
+                -summary -output json
+                echo "#########################################################"
+              done <<< $(ls kubeconform-values/)
+            os: "ubuntu-latest"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Running ${{ matrix.check_name }}
+        working-directory: ${{ matrix.working_directory }}
+        run: |
+          echo '${{ matrix.script }}' > script.sh
+          bash -c "$(cat script.sh)"

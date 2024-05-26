@@ -26,19 +26,20 @@ locals {
       repository      = "https://ealenn.github.io/charts"
       chart           = "echo-server"
       version         = "0.5.0"
-      atomic          = true
+      atomic          = false
       cleanup_on_fail = true
       namespace       = "demo-apps"
     }
     python-demo-logs-app = {
-      enabled         = var.py_logging_helm_enabled
-      chart           = "./demo-services/python-app/deployment"
-      namespace       = "demo-monitoring"
-      atomic          = true
-      cleanup_on_fail = true
-      values = [
-        file("./demo-services/python-app/deployment/values.yaml")
-      ]
+      enabled          = var.py_logging_helm_enabled
+      chart            = "./demo-services/python-app/deployment"
+      namespace        = "demo-apps"
+      create_namespace = false
+      atomic           = false
+      cleanup_on_fail  = true
+      override_values = {
+        "pdb.maxUnavailable" = "1"
+      }
     }
     loki = {
       enabled         = var.loki_helm_enabled

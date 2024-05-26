@@ -41,6 +41,6 @@ labels: {}
 annotations: {}
 priorityClassName: ""
 
-check_recommended: true
+check_recommended: false
 
 pdb: {}

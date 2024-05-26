@@ -68,3 +68,7 @@ jobs:
           registry: ghcr.io
           username: ${{github.actor}}
           password: ${{secrets.GITHUB_TOKEN}}
+      - name: "Push demo app"
+        run: |
+          docker tag python-logs-demo-app:${GITHUB_SHA}-${GITHUB_RUN_ID} ghcr.io/${GITHUB_REPOSITORY_OWNER}/python-logs-demo-app:${GITHUB_SHA}-${GITHUB_RUN_ID}
+          docker push ghcr.io/${GITHUB_REPOSITORY_OWNER}/python-logs-demo-app:${GITHUB_SHA}-${GITHUB_RUN_ID}

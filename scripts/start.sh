@@ -81,7 +81,7 @@ setup_grafana_connection() {
   echo
   print_info "Admin user: ${grafana_admin_user}"
   print_info "Admin pass: ${grafana_admin_pass}"
-  print_info "Visit localhost:8080 to access Grafana web UI."
+  print_info "Visit http://localhost:8080 to access Grafana web UI."
   echo
 }
 

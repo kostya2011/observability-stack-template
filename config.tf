@@ -28,15 +28,15 @@ locals {
       version         = "0.5.0"
       atomic          = false
       cleanup_on_fail = true
-      namespace       = "demo-apps"
+      namespace       = "demo-echo-server"
     }
     python-demo-logs-app = {
       enabled          = var.py_logging_helm_enabled
       chart            = "./demo-services/python-app/deployment"
-      namespace        = "demo-apps"
-      create_namespace = false
+      create_namespace = true
       atomic           = false
       cleanup_on_fail  = true
+      namespace        = "demo-python-app"
       override_values = {
         "pdb.maxUnavailable" = "1"
       }

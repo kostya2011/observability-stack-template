@@ -18,8 +18,8 @@ resource "helm_release" "this" {
   dynamic "set" {
     for_each = try(each.value.override_values, {})
     content {
-      name  = set.value["name"]
-      value = set.value["value"]
+      name  = set.key
+      value = set.value
     }
   }
 }

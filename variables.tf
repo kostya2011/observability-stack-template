@@ -8,7 +8,7 @@ variable "monitoring_helm_enabled" {
 variable "py_logging_helm_enabled" {
   description = "Create python logging app helm"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "echo_nginx_server_helm_enabled" {

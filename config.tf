@@ -9,7 +9,7 @@ locals {
     config_path    = "~/.kube/config"
     config_context = "minikube"
   }
-  namespaces = ["demo-apps", "demo-monitoring", "demo-loki"]
+  namespaces = ["demo-echo-server", "demo-python-app", "demo-monitoring", "demo-loki"]
   helm_releases_tmpl = {
     monitoring = {
       enabled         = var.monitoring_helm_enabled
@@ -28,17 +28,17 @@ locals {
       version         = "0.5.0"
       atomic          = false
       cleanup_on_fail = true
-      namespace       = "demo-apps"
+      namespace       = "demo-echo-server"
     }
     python-demo-logs-app = {
-      enabled          = var.py_logging_helm_enabled
-      chart            = "./demo-services/python-app/deployment"
-      namespace        = "demo-apps"
-      create_namespace = false
-      atomic           = false
-      cleanup_on_fail  = true
+      enabled         = var.py_logging_helm_enabled
+      chart           = "./demo-services/python-app/deployment"
+      atomic          = false
+      cleanup_on_fail = true
+      namespace       = "demo-python-app"
       override_values = {
         "pdb.maxUnavailable" = "1"
+        "gh_packages_token"  = var.py_logging_gh_token
       }
     }
     loki = {

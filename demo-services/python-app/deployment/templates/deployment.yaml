@@ -66,3 +66,6 @@ spec:
         {{- include "py_log_demo.resources" . | nindent 8 }}
         {{- include "py_log_demo.priorityClassName" . | nindent 8 }}
         imagePullPolicy: {{ .Values.imagePullPolicy | default "IfNotPresent" }}
+        {{- with .Values.gh_packages_token }}
+        imagePullSecrets: "image-secret"
+        {{- end }}

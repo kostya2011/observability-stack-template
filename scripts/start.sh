@@ -31,7 +31,7 @@ command_exists () {
 
 handle_error() {
     print_error "An error occurred. Exiting script..."
-    print_info "Script does not shutdown the minikube cluster and does not uninstaling helm automatically!"
+    print_info "Script does not shutdown the minikube cluster and does not uninstall helm resources automatically!"
     print_info "Please clean up manually before running script again."
     exit 1
 }

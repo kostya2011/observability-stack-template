@@ -1,7 +1,6 @@
 ---
 app: demo-app-python
-namespace: demo-apps
-image: local/python-logs-demo-app:v1.0.1
+image: "ghcr.io/kostya2011/python-logs-demo-app:b56e6990629bbeb76f3ff8e06879c01b58b60d2e-9245190938" # yamllint disable-line rule:line-length
 type: python
 
 container_ports: []
@@ -44,3 +43,5 @@ priorityClassName: ""
 check_recommended: true
 
 pdb: {}
+
+gh_packages_token: ""

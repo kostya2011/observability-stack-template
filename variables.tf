@@ -8,7 +8,13 @@ variable "monitoring_helm_enabled" {
 variable "py_logging_helm_enabled" {
   description = "Create python logging app helm"
   type        = bool
-  default     = false
+  default     = true
+}
+
+variable "py_logging_gh_token" {
+  description = "Token for gh packages image for demo app"
+  type        = string
+  default     = ""
 }
 
 variable "echo_nginx_server_helm_enabled" {

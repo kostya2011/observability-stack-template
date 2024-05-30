@@ -9,7 +9,9 @@ NC="\033[0m"
 GREEN="\033[0;32m"
 BLUE="\033[0;34m"
 CMD=${1}
-GITHUB_TOKEN=${GITHUB_TOKEN:?"Specify GH PAT. https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"}
+GITHUB_AUTH=${GITHUB_AUTH:?"Specify GH Auth for packages registry. https://dev.to/asizikov/using-github-container-registry-with-kubernetes-38fb"}
+
+trap 'handle_error' ERR SIGTERM SIGQUIT SIGINT
 
 print_error() {
   echo -e "❌ ${RED}$1${NC}"
@@ -27,6 +29,13 @@ command_exists () {
   command -v "$1" >/dev/null 2>&1
 }
 
+handle_error() {
+    print_error "An error occurred. Exiting script..."
+    print_info "Script does not shutdown the minikube cluster and does not uninstaling helm automatically!"
+    print_info "Please clean up manually before running script again."
+    exit 1
+}
+
 print_help() {
   print_error "No command was passed"
   print_info "Usage: $0 <command>"
@@ -40,7 +49,7 @@ print_help() {
 validate() {
   # check if minikube/helm/terraform are installed
   print_info "Checking dependencies."
-  if ! command_exists minikube || ! command_exists helm || ! command_exists terraform; then
+  if ! command_exists minikube || ! command_exists helm || ! command_exists terraform || ! command_exists yq; then
     print_error "One or more required commands (Minikube, Helm, Terraform) are not installed; exiting"
     exit 1
   fi
@@ -62,9 +71,30 @@ tf_apply() {
   print_info "Running terraform..."
 
   terraform init -input=false
-  terraform apply -input=false -auto-approve -compact-warnings
+  terraform apply -input=false -auto-approve -compact-warnings -var "py_logging_gh_token=${GITHUB_AUTH}"
 
   print_success "Applied terraform config."
+}
+
+ask_yes_no() {
+    while true; do
+        print_info "${1}"
+        read yn
+        case $yn in
+            [Yy]* ) 
+              print_info "Proceeding with the script."
+              return 0
+            ;;
+            [Nn]* )
+              print_info "Declained."
+              exit 1
+            ;;
+            * ) 
+              print_info "Please answer y or n."
+              exit 1
+            ;;
+        esac
+    done
 }
 
 setup_grafana_connection() {
@@ -113,11 +143,13 @@ main() {
     # Run command
     case $CMD in
       apply)
+        ask_yes_no "This will create minikube cluster and install obesrvability stack. Do you wish to proceed? [y/n]"
         minikube_create
         tf_apply
         setup_grafana_connection
       ;;
       destroy)
+        ask_yes_no "This will delete minikube cluster and uninstall obesrvability stack. Do you wish to proceed? [y/n]"
         tf_destroy
         minikube_delete
       ;;
